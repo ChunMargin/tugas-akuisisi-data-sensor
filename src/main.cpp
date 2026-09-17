@@ -1,32 +1,26 @@
-#include <Arduino.h>
-#include <DHT.h>
+#include <Wire.h>
+#include <BH1750.h>
 
-#define DHTPIN 4      // GPIO4, pin aman untuk DHT11 pada ESP32-C3
-#define DHTTYPE DHT11 // sensor DHT11
-
-DHT dht(DHTPIN, DHTTYPE);
+BH1750 lightMeter;
 
 void setup() {
   Serial.begin(115200);
-  delay(1000); // tunggu serial USB siap
-  Serial.println("Monitoring sensor DHT11...");
-  dht.begin();
+
+  Wire.begin(20, 21);  // SDA=20, SCL=21
+
+  if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE)) {
+    Serial.println("BH1750 siap.");
+  } else {
+    Serial.println("BH1750 tidak terdeteksi.");
+  }
 }
 
 void loop() {
-  float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature();
+  float lux = lightMeter.readLightLevel();
 
-  if (isnan(humidity) || isnan(temperature)) {
-    Serial.println("Gagal membaca sensor DHT11!");
-  } else {
-    Serial.print("Kelembapan: ");
-    Serial.print(humidity);
-    Serial.print("%\t");
-    Serial.print("Suhu: ");
-    Serial.print(temperature);
-    Serial.println("°C");
-  }
+  Serial.print("Cahaya: ");
+  Serial.print(lux, 2);
+  Serial.println(" lx");
 
   delay(1000);
 }
