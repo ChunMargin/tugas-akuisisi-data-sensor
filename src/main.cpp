@@ -1,26 +1,21 @@
-#include <Wire.h>
-#include <BH1750.h>
+#include <Arduino.h>
 
-BH1750 lightMeter;
+const int SWITCH_PIN = 3;
 
 void setup() {
   Serial.begin(115200);
-
-  Wire.begin(20, 21);  // SDA=20, SCL=21
-
-  if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE)) {
-    Serial.println("BH1750 siap.");
-  } else {
-    Serial.println("BH1750 tidak terdeteksi.");
-  }
+  // Mengaktifkan pull-down internal agar pin stabil di LOW saat mengambang
+  pinMode(SWITCH_PIN, INPUT_PULLDOWN); 
 }
 
 void loop() {
-  float lux = lightMeter.readLightLevel();
+  int state = digitalRead(SWITCH_PIN);
 
-  Serial.print("Cahaya: ");
-  Serial.print(lux, 2);
-  Serial.println(" lx");
+  if (state == HIGH) {
+    Serial.println("SPDT = HIGH / ON");
+  } else {
+    Serial.println("SPDT = LOW / OFF");
+  }
 
-  delay(1000);
+  delay(300);
 }
