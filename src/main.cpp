@@ -15,8 +15,6 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
 
-  Serial.println("=== NODE AKUISISI IIoT ===");
-
   pinMode(SWITCH_PIN, INPUT_PULLDOWN);
   analogReadResolution(12);
 
@@ -29,12 +27,11 @@ void setup() {
   }
 
   dht.begin();
-  Serial.println("Monitoring sensor terpadu aktif.");
 }
 
 void loop() {
-  static unsigned long lastPrint = 0;
-  const unsigned long interval = 2000;
+  static unsigned long lastPrint = 1000;
+  const unsigned long interval = 1000;
 
   if (millis() - lastPrint >= interval) {
     lastPrint = millis();
@@ -78,5 +75,4 @@ void loop() {
     Serial.println("----------------------------------------");
   }
 
-  delay(100);
 }
